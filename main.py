@@ -31,7 +31,7 @@ if SLACK_WEBHOOK_URL is None:
 client = docker.from_env()
 
 
-def send_slack_message(container_name, job_id):
+def send_slack_message(container_id, job_id, hostname):
     """
     Sends a message to Slack if a container with the specified job ID
     has no corresponding process running on the host.
@@ -41,7 +41,7 @@ def send_slack_message(container_name, job_id):
     - job_id: Job ID of the Docker container
     """
     message = {
-        "text": f"Container {container_name} with job ID {job_id} has no corresponding process running on the host."
+        "text": f"Container {container_id} with job ID {job_id} has no corresponding process running on the host. {hostname}"
     }
     requests.post(SLACK_WEBHOOK_URL, json=message)
 
@@ -73,7 +73,7 @@ def check_docker_containers():
             job_id = labels.get('job_id')
             if job_id and not has_running_process(job_id):
                 logging.warning(f"Container {container.name} with job ID {job_id} has no corresponding process.")
-                send_slack_message(container.name, job_id)
+                send_slack_message(container.id, job_id, labels.get('worker_hostname'))
             else:
                 logging.info(f"Container {container.name} with job ID {job_id} has a corresponding process.")
 
