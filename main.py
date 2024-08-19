@@ -21,7 +21,7 @@ import requests
 # the specified Slack webhook.
 # -----------------------------------------------
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
 if SLACK_WEBHOOK_URL is None:
