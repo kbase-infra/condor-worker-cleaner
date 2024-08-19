@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: condor-worker-cleaner
+spec:
+  selector:
+    matchLabels:
+      app: condor-worker-cleaner
+  template:
+    metadata:
+      labels:
+        app: condor-worker-cleaner
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: client_group
+                operator: Exists
+      containers:
+      - name: condor-worker-cleaner
+        image: ghcr.io/kbase-infra/condor-worker-cleaner:main
+        env:
+        - name: SLACK_WEBHOOK_URL
+          value: "<your-slack-webhook-url>"
+        volumeMounts:
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket

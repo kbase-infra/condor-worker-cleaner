@@ -8,6 +8,7 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: Never
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -18,6 +19,9 @@ spec:
           containers:
           - name: condor-worker-cleaner
             image: ghcr.io/kbase-infra/condor-worker-cleaner:main
+            env:
+            - name: SLACK_WEBHOOK_URL
+              value: "<your-slack-webhook-url>"  # Replace with your actual Slack webhook URL
             volumeMounts:
             - name: docker-socket
               mountPath: /var/run/docker.sock
