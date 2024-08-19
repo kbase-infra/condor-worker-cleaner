@@ -11,6 +11,8 @@ spec:
       labels:
         app: condor-worker-cleaner
     spec:
+      hostPID: true # Grants full privileges to the container to see PIDs
+      hostNetwork: true  # Enables host networking because can't resolve DNS on condor hosts for some reason
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -24,6 +26,8 @@ spec:
         env:
         - name: SLACK_WEBHOOK_URL
           value: "<your-slack-webhook-url>"
+        securityContext:
+          privileged: true  # Grants full privileges to the container
         volumeMounts:
         - name: docker-socket
           mountPath: /var/run/docker.sock
