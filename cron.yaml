@@ -16,7 +16,13 @@ spec:
                   - key: client_group
                     operator: Exists  # Ensures that the job runs on nodes with the label, regardless of its value
           containers:
-          - name: worker-cleaner
-            image: my-cleanup-image:latest
-            command: ["/bin/sh", "-c", "your-cleanup-command-here"]
-          restartPolicy: OnFailure
+          - name: condor-worker-cleaner
+            image: ghcr.io/kbase-infra/condor-worker-cleaner:main
+            volumeMounts:
+            - name: docker-socket
+              mountPath: /var/run/docker.sock
+          volumes:
+          - name: docker-socket
+            hostPath:
+              path: /var/run/docker.sock
+              type: Socket
