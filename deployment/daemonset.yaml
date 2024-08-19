@@ -20,6 +20,10 @@ spec:
             - matchExpressions:
               - key: client_group
                 operator: Exists
+      tolerations:
+      - key: "condor_worker"
+        operator: "Exists"
+        effect: "NoSchedule"
       containers:
       - name: condor-worker-cleaner
         image: ghcr.io/kbase-infra/condor-worker-cleaner:main
