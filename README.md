@@ -14,6 +14,7 @@ The script checks containers with the following labels:
 - `ee2_endpoint`: Identifies KBase containers.
 - `job_id`: Identifies the job ID of the container.
 - `worker_hostname`: Identifies the worker hostname.
+- `app_id`: Identifies the app ID of the container.
 
 ## Functionality
 The script operates as follows:

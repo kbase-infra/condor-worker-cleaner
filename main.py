@@ -15,6 +15,7 @@ import requests
 # - ee2_endpoint: Identifies Kbase containers
 # - job_id: Identifies the job ID of the container
 # - worker_hostname: Identifies the worker hostname
+# - app_id: Identifies the app ID of the container
 #
 # If a container does not have a corresponding process
 # running on the host, the script sends a message to
@@ -31,7 +32,7 @@ if SLACK_WEBHOOK_URL is None:
 client = docker.from_env()
 
 
-def send_slack_message(container_id, job_id, hostname):
+def send_slack_message(container_id, job_id, hostname, app_id):
     """
     Sends a message to Slack if a container with the specified job ID
     has no corresponding process running on the host.
@@ -39,9 +40,11 @@ def send_slack_message(container_id, job_id, hostname):
     Parameters:
     - container_name: Name of the Docker container
     - job_id: Job ID of the Docker container
+    - hostname: Hostname of the worker running the container
+    - app_id: App ID of the Docker container
     """
     message = {
-        "text": f"Container {container_id} with job ID {job_id} has no corresponding process running on the host. {hostname}"
+        "text": f"Container {container_id} with job ID {job_id} has no corresponding process running on the host. {hostname}. App ID: {app_id}"
     }
     requests.post(SLACK_WEBHOOK_URL, json=message)
 
@@ -71,9 +74,10 @@ def check_docker_containers():
         labels = container.labels
         if 'ee2_endpoint' in labels:
             job_id = labels.get('job_id')
+            app_id = labels.get('app_id')
             if job_id and not has_running_process(job_id):
                 logging.warning(f"Container {container.name} with job ID {job_id} has no corresponding process.")
-                send_slack_message(container.id, job_id, labels.get('worker_hostname'))
+                send_slack_message(container.id, job_id, labels.get('worker_hostname'), app_id)
             else:
                 logging.info(f"Container {container.name} with job ID {job_id} has a corresponding process.")
 
