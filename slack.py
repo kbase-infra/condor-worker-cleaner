@@ -1,6 +1,6 @@
 import requests
 
-def send_slack_message(webhook_url, container_id, job_id, hostname, app_id, kc):
+def send_slack_message(webhook_url, container_id, job_id, hostname, app_id, kc, running_days):
     """
     Sends a message to Slack if a container with the specified job ID
     has no corresponding process running on the host.
@@ -15,6 +15,6 @@ def send_slack_message(webhook_url, container_id, job_id, hostname, app_id, kc):
     """
     message = {
         "text": f"Container {container_id} with job ID {job_id} has no corresponding process running on the host. "
-                f"Hostname: {hostname}. App ID: {app_id}. Container killed: {kc}"
+                f"Hostname: {hostname}. App ID: {app_id}. Container killed: {kc}. Running for {running_days} days."
     }
     requests.post(webhook_url, json=message)
