@@ -15,7 +15,7 @@ import requests
 # - ee2_endpoint: Identifies Kbase containers
 # - job_id: Identifies the job ID of the container
 # - worker_hostname: Identifies the worker hostname
-# - app_id: Identifies the app ID of the container
+# - app_id: Identifies the KBase app ID of the container
 #
 # If a container does not have a corresponding process
 # running on the host, the script sends a message to
