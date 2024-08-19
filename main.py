@@ -62,11 +62,12 @@ def has_running_process(job_id):
     """
     for proc in psutil.process_iter(['pid', 'cmdline']):
         cmdline = proc.info['cmdline']
-        if cmdline and job_id in ' '.join(cmdline):
+        if cmdline is not None and job_id in ' '.join(cmdline):
             logging.info(f"Matching process found: PID {proc.info['pid']} - CMD: {' '.join(cmdline)}")
             return True
     logging.info(f"No matching process found for job ID: {job_id}")
     return False
+
 
 
 
