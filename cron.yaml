@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: condor-worker-cleaner
+spec:
+  schedule: "*/5 * * * *"  # Every 5 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: client_group
+                    operator: Exists  # Ensures that the job runs on nodes with the label, regardless of its value
+          containers:
+          - name: worker-cleaner
+            image: my-cleanup-image:latest
+            command: ["/bin/sh", "-c", "your-cleanup-command-here"]
+          restartPolicy: OnFailure
