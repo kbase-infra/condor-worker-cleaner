@@ -60,7 +60,14 @@ def has_running_process(job_id):
     Returns:
     - bool: True if a matching process is found, False otherwise
     """
-    return any(job_id in proc.info['cmdline'] for proc in psutil.process_iter(['cmdline']))
+    for proc in psutil.process_iter(['pid', 'cmdline']):
+        cmdline = proc.info['cmdline']
+        if cmdline and job_id in ' '.join(cmdline):
+            logging.info(f"Matching process found: PID {proc.info['pid']} - CMD: {' '.join(cmdline)}")
+            return True
+    logging.info(f"No matching process found for job ID: {job_id}")
+    return False
+
 
 
 def check_docker_containers():
