@@ -4,5 +4,5 @@
 while true; do
     python /app/main.py
     echo "Script execution completed. Sleeping for 5 minutes..."
-    sleep 300  # Sleep for 5 minutes (300 seconds)
+    sleep 3600  # Sleep for 60 minutes
 done
